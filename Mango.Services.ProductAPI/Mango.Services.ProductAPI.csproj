@@ -30,9 +30,13 @@
     <None Remove="Microsoft.EntityFrameworkCore.Tools" />
     <None Remove="DbContexts\" />
     <None Remove="Models\" />
+    <None Remove="Repository\" />
+    <None Remove="Models\Dto\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DbContexts\" />
     <Folder Include="Models\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Models\Dto\" />
   </ItemGroup>
 </Project>
