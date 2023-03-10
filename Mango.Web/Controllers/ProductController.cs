@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 
 namespace Mango.Web.Controllers
 {
-    [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -21,7 +20,7 @@ namespace Mango.Web.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> ProductIndex()
+        public async Task<IActionResult> Index()
         {
             List<ProductDto> list = new();
             var response = await _productService.GetAllProductsAsync<ResponseDto>();
@@ -30,6 +29,52 @@ namespace Mango.Web.Controllers
                 list = JsonConvert.DeserializeObject<List<ProductDto>>(Convert.ToString(response.Result));   
             } 
             return View(list);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _productService.CreateProductAsync<ResponseDto>(model);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                } 
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var response = await _productService.GetProductByIdAsync<ResponseDto>(id);
+            if (response != null && response.IsSuccess)
+            {
+                var model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result)); 
+                return View(model);
+            } 
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ProductDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _productService.UpdateProductAsync<ResponseDto>(model);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(Index));
+                } 
+            }
+            return View(model);
         }
     }
 }

@@ -21,7 +21,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-options.UseSqlServer(config.GetConnectionString("Mac")));
+options.UseSqlServer(config.GetConnectionString("Windows")));
 
 var app = builder.Build();
 
