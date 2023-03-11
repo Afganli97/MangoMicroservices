@@ -1,5 +1,6 @@
 ﻿using Mango.Service.Identity.DbContexts;
 using Mango.Service.Identity.Helpers;
+using Mango.Service.Identity.Initializer;
 using Mango.Service.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ var config = builder.Configuration;
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
@@ -28,6 +29,8 @@ var identityBuilder = builder.Services.AddIdentityServer(option =>{
 .AddInMemoryClients(SD.Clients)
 .AddAspNetIdentity<AppUser>();
 
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
 identityBuilder.AddDeveloperSigningCredential();
 
 var app = builder.Build();
@@ -41,6 +44,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -52,6 +56,12 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
+    dbInitializer.Initialize();
+}
 
 app.Run();
 

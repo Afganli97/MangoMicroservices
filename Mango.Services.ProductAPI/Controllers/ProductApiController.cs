@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mango.Services.ProductAPI.Models.Dto;
 using Mango.Services.ProductAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.ProductAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/products")]
     public class ProductApiController : ControllerBase
@@ -86,6 +88,7 @@ namespace Mango.Services.ProductAPI.Controllers
             return _response;
         }
 
+        [Authorize(Roles="Admin")]
         [HttpDelete]
         [Route("{id}")]
         public async Task<object> Delete(int id)
