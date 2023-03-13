@@ -47,7 +47,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Windows")));
+    options.UseSqlServer(config.GetConnectionString("Mac")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>{
     options.Authority = "https://localhost:7034/";
