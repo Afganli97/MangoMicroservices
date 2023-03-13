@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.ProductAPI.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/products")]
     public class ProductApiController : ControllerBase
@@ -55,8 +54,9 @@ namespace Mango.Services.ProductAPI.Controllers
             }
             return _response;
         }
-
+        
         [HttpPost]
+        [Authorize]
         public async Task<object> Post([FromBody] ProductDto productDto)
         {
             try
@@ -73,6 +73,7 @@ namespace Mango.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<object> Put([FromBody] ProductDto productDto)
         {
             try
