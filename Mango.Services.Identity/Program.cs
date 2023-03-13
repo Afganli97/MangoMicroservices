@@ -1,8 +1,12 @@
-﻿using Mango.Service.Identity.DbContexts;
+﻿using Duende.IdentityServer.AspNetIdentity;
+using Duende.IdentityServer.Services;
+using Mango.Service.Identity.DbContexts;
 using Mango.Service.Identity.Helpers;
 using Mango.Service.Identity.Initializer;
 using Mango.Service.Identity.Models;
+using Mango.Services.Identity.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +17,26 @@ var config = builder.Configuration;
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
+
+// builder.Services.AddIdentity<AppUser, IdentityRole>()
+//     .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+// builder.Services.AddIdentity<AppUser, IdentityRole>()
+//     .AddEntityFrameworkStores<AppDbContext>()
+//     .AddRoleManager<RoleManager<IdentityRole>>()
+//     .AddDefaultTokenProviders();
+
+// builder.Services.AddScoped<RoleManager<AppUser>>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddRoleManager<RoleManager<IdentityRole>>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+builder.Services.AddScoped<IRoleStore<IdentityRole>, RoleStore<IdentityRole, AppDbContext>>();
+    
 
 var identityBuilder = builder.Services.AddIdentityServer(option =>{
     option.Events.RaiseErrorEvents = true;
@@ -29,7 +49,11 @@ var identityBuilder = builder.Services.AddIdentityServer(option =>{
 .AddInMemoryClients(SD.Clients)
 .AddAspNetIdentity<AppUser>();
 
+
+
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 builder.Services.AddRazorPages();
 

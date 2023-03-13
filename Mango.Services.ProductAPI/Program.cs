@@ -47,10 +47,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>{
-    options.Authority = "https://localhost:7034/";
+    options.Authority = "https://localhost:7295/";
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateAudience = false
@@ -74,6 +74,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

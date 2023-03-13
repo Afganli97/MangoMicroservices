@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Mango.Services.Identity.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230313104828_Initial")]
+    [Migration("20230313173735_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

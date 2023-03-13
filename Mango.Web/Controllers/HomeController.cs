@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Mango.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Mango.Web.Controllers;
 
@@ -31,14 +32,14 @@ public class HomeController : Controller
     }
 
     [Authorize]
-    public IActionResult Login()
+    public async Task<IActionResult> Login()
     {
         return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Logout()
     {
-        return SignOut("Cookies", "iodc");
+        return SignOut("Cookies", "oidc");
     }
 }
 
