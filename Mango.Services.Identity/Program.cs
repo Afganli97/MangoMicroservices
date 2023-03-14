@@ -17,17 +17,7 @@ var config = builder.Configuration;
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Windows")));
-
-// builder.Services.AddIdentity<AppUser, IdentityRole>()
-//     .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
-
-// builder.Services.AddIdentity<AppUser, IdentityRole>()
-//     .AddEntityFrameworkStores<AppDbContext>()
-//     .AddRoleManager<RoleManager<IdentityRole>>()
-//     .AddDefaultTokenProviders();
-
-// builder.Services.AddScoped<RoleManager<AppUser>>();
+    options.UseSqlServer(config.GetConnectionString("Mac")));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
