@@ -8,9 +8,15 @@ var config = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddHttpClient<ICartService, CartService>();
+
+
 Mango.Web.SD.ProductAPIBase = config["ServiceUrls:ProductAPI"];
+Mango.Web.SD.ShopingCartAPIBase = config["ServiceUrls:ShopingCartAPI"];
+
 
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddAuthentication(options =>
 {
