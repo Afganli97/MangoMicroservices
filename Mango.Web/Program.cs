@@ -12,7 +12,7 @@ builder.Services.AddHttpClient<ICartService, CartService>();
 
 
 Mango.Web.SD.ProductAPIBase = config["ServiceUrls:ProductAPI"];
-Mango.Web.SD.ShopingCartAPIBase = config["ServiceUrls:ShopingCartAPI"];
+Mango.Web.SD.ShoppingCartAPIBase = config["ServiceUrls:ShoppingCartAPI"];
 
 
 builder.Services.AddScoped<IProductService, ProductService>();

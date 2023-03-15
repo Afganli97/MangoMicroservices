@@ -40,7 +40,7 @@ namespace Mango.Services.ShopingCartAPI.Repository
             var productInDb = await _context.Products.FirstOrDefaultAsync(p => p.Id ==cartDto.CartDetailDtos.FirstOrDefault().ProductId);
             if (productInDb == null)
             {
-                _context.Add(cart.CartDetails.FirstOrDefault().Product);
+                _context.Products.Add(cart.CartDetails.FirstOrDefault().Product);
                 await _context.SaveChangesAsync();
             }
 
@@ -76,7 +76,8 @@ namespace Mango.Services.ShopingCartAPI.Repository
                     await _context.SaveChangesAsync(); 
                 }
             }
-            return _mapper.Map<CartDto>(cart);
+            var cartDtoReturn = _mapper.Map<CartDto>(cart);
+            return cartDtoReturn;
         }
 
         public async Task<CartDto> GetCartByUserId(string userId)
