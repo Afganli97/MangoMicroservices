@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Mango.Services.ShopingCartAPI.DbContexts;
 using Mango.Services.ShopingCartAPI.Helpers;
+using Mango.Services.ShopingCartAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -43,7 +44,7 @@ builder.Services.AddSwaggerGen(c=>{
 
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-//builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
     options.UseSqlServer(config.GetConnectionString("Mac")));

@@ -8,6 +8,6 @@ namespace Mango.Services.ShopingCartAPI.Models.DTOs
     public class CartDto
     {
         public CartHeaderDto CartHeaderDto { get; set; }
-        public List<CartDetailDto> CartDetailDtos { get; set; }
+        public IEnumerable<CartDetailDto> CartDetailDtos { get; set; }
     }
 }
