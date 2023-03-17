@@ -9,14 +9,20 @@ var config = builder.Configuration;
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
+builder.Services.AddHttpClient<ICouponService, CouponService>();
+
 
 
 Mango.Web.SD.ProductAPIBase = config["ServiceUrls:ProductAPI"];
 Mango.Web.SD.ShoppingCartAPIBase = config["ServiceUrls:ShoppingCartAPI"];
+Mango.Web.SD.CouponAPIBase = config["ServiceUrls:CouponApi"];
+
 
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICouponService, CouponService>();
+
 
 builder.Services.AddAuthentication(options =>
 {

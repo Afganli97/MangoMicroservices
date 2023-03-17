@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Mango.Services.CouponAPI.Models;
+using Mango.Services.CouponAPI.Models.DTOs;
 
 namespace Mango.Services.CouponAPI.Helpers
 {
@@ -11,7 +13,7 @@ namespace Mango.Services.CouponAPI.Helpers
         public static MapperConfiguration RegisterMaps()
         {
             var mappingConfig = new MapperConfiguration(config =>{
-                
+                config.CreateMap<CouponDto, Coupon>().ReverseMap();
             });
             return mappingConfig;
         } 
