@@ -12,6 +12,8 @@ var config = builder.Configuration;
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 
+Mango.Services.ShopingCartAPI.Helpers.SD.BaseTopic = config["ServiceBusTopics:DefaultTopic"];
+
 // Add services to the container.
 
 builder.Services.AddControllers();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mango.AzureBus;
 using Mango.Services.ShopingCartAPI.Messages;
 using Mango.Services.ShopingCartAPI.Models.DTOs;
 using Mango.Services.ShopingCartAPI.Repository;
@@ -14,12 +15,14 @@ namespace Mango.Services.ShopingCartAPI.Controllers
     public class CartController : ControllerBase
     {
          private readonly ICartRepository _repository;
+         private readonly IMessageBus _messageBus;
          protected ResponseDto _response;
 
-        public CartController(ICartRepository repository)
+        public CartController(ICartRepository repository, IMessageBus messageBus)
         {
             _repository = repository;
             _response = new();
+            _messageBus = messageBus;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -144,6 +147,8 @@ namespace Mango.Services.ShopingCartAPI.Controllers
                 if (cartDto == null) return BadRequest();
 
                 checkoutHeader.CartDetails = cartDto.CartDetailDtos;
+
+                await _messageBus.PublishMessage(checkoutHeader, Mango.Services.ShopingCartAPI.Helpers.SD.BaseTopic);
             }
             catch (Exception ex)
             {

@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mango.AzureBus;
 using Mango.Services.ShopingCartAPI.Models.DTOs;
 
 namespace Mango.Services.ShopingCartAPI.Messages
 {
-    public class CheckoutHeaderDto
+    public class CheckoutHeaderDto : BaseMessage
     {
         public int Id { get; set; }
         public string UserId { get; set; }
