@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mango.AzureBus;
 using Mango.Services.ShopingCartAPI.DbContexts;
 using Mango.Services.ShopingCartAPI.Helpers;
 using Mango.Services.ShopingCartAPI.Repository;
@@ -45,9 +46,10 @@ builder.Services.AddSwaggerGen(c=>{
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>{
     options.Authority = "https://localhost:7295/";
