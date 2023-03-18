@@ -17,7 +17,7 @@ var config = builder.Configuration;
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Windows")));
+    options.UseSqlServer(config.GetConnectionString("Mac")));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
