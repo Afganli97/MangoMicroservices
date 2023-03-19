@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using Mango.Services.OrderAPI.DbContexts;
+using Mango.Services.OrderAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -43,7 +44,12 @@ builder.Services.AddSwaggerGen(c=>{
 
 //builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-//builder.Services.AddScoped<ICouponRepository, CouponRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionBuilder.UseSqlServer(config.GetConnectionString("Mac"));
+
+builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options));
 
 builder.Services.AddDbContext<AppDbContext>(options=>
     options.UseSqlServer(config.GetConnectionString("Mac")));
