@@ -13,6 +13,7 @@ var config = builder.Configuration;
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 
 Mango.Services.ShopingCartAPI.Helpers.SD.BaseTopic = config["ServiceBusTopics:DefaultTopic"];
+Mango.Services.ShopingCartAPI.Helpers.SD.CouponAPIBase = config["ServiceUrls:CouponApi"];
 
 // Add services to the container.
 
@@ -45,13 +46,15 @@ builder.Services.AddSwaggerGen(c=>{
     });
 });
 
+
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>{
     options.Authority = "https://localhost:7295/";
@@ -67,6 +70,8 @@ builder.Services.AddAuthorization( options =>{
         policy.RequireClaim("scope","mango");
     });
 });
+
+builder.Services.AddHttpClient<ICouponRepository, CouponRepository>(x=>x.BaseAddress = new Uri(config["ServiceUrls:CouponApi"]));
 
 var app = builder.Build();
 

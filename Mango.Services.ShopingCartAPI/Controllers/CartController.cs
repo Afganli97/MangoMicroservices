@@ -14,15 +14,17 @@ namespace Mango.Services.ShopingCartAPI.Controllers
     [Route("api/cart")]
     public class CartController : ControllerBase
     {
-         private readonly ICartRepository _repository;
-         private readonly IMessageBus _messageBus;
-         protected ResponseDto _response;
+        private readonly ICartRepository _cartRepository;
+        private readonly ICouponRepository _couponRepository;
+        private readonly IMessageBus _messageBus;
+        protected ResponseDto _response;
 
-        public CartController(ICartRepository repository, IMessageBus messageBus)
+        public CartController(IMessageBus messageBus, ICouponRepository couponRepository, ICartRepository cartRepository)
         {
-            _repository = repository;
             _response = new();
             _messageBus = messageBus;
+            _couponRepository = couponRepository;
+            _cartRepository = cartRepository;
         }
 
         [HttpGet("GetCart/{userId}")]
@@ -30,7 +32,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                CartDto cartDto = await _repository.GetCartByUserId(userId);
+                CartDto cartDto = await _cartRepository.GetCartByUserId(userId);
                 _response.Result = cartDto;
             }
             catch (Exception ex)
@@ -46,7 +48,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                CartDto cartDto = await _repository.CreateUpdateCartDto(newCartDto);
+                CartDto cartDto = await _cartRepository.CreateUpdateCartDto(newCartDto);
                 _response.Result = cartDto;
             }
             catch (Exception ex)
@@ -62,7 +64,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                CartDto cartDto = await _repository.CreateUpdateCartDto(newCartDto);
+                CartDto cartDto = await _cartRepository.CreateUpdateCartDto(newCartDto);
                 _response.Result = cartDto;
             }
             catch (Exception ex)
@@ -78,7 +80,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                bool isSuccess = await _repository.RemoveFromCart(cartId);
+                bool isSuccess = await _cartRepository.RemoveFromCart(cartId);
                 _response.Result = isSuccess;
             }
             catch (Exception ex)
@@ -94,7 +96,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                bool isSuccess = await _repository.ClearCart(userId);
+                bool isSuccess = await _cartRepository.ClearCart(userId);
                 _response.Result = isSuccess;
             }
             catch (Exception ex)
@@ -110,7 +112,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                bool isSuccess = await _repository.ApplyCoupon(cartDto.CartHeaderDto.UserId, cartDto.CartHeaderDto.CouponCode);
+                bool isSuccess = await _cartRepository.ApplyCoupon(cartDto.CartHeaderDto.UserId, cartDto.CartHeaderDto.CouponCode);
                 _response.Result = isSuccess;
             }
             catch (Exception ex)
@@ -126,7 +128,7 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                bool isSuccess = await _repository.RemoveCoupon(userId);
+                bool isSuccess = await _cartRepository.RemoveCoupon(userId);
                 _response.Result = isSuccess;
             }
             catch (Exception ex)
@@ -142,9 +144,21 @@ namespace Mango.Services.ShopingCartAPI.Controllers
         {
             try
             {
-                CartDto cartDto = await _repository.GetCartByUserId(checkoutHeader.UserId);
+                CartDto cartDto = await _cartRepository.GetCartByUserId(checkoutHeader.UserId);
 
                 if (cartDto == null) return BadRequest();
+
+                if (!string.IsNullOrEmpty(checkoutHeader.CouponCode))
+                {
+                    CouponDto couponDto = await _couponRepository.GetCoupon(checkoutHeader.CouponCode);
+                    if (checkoutHeader.DiscountTotal != couponDto.Discount)
+                    {   
+                        _response.IsSuccess = false;
+                        _response.ErrorMessages = new List<string>(){"Coupon Price has changed, please confirm"};
+                        _response.DisplayMessage = "Coupon Price has changed, please confirm";
+                        return _response;
+                    }
+                }
 
                 checkoutHeader.CartDetails = cartDto.CartDetailDtos;
 

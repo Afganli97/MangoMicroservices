@@ -48,7 +48,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>{
     options.Authority = "https://localhost:7295/";

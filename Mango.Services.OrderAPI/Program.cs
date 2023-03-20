@@ -1,6 +1,7 @@
 ﻿
 
 using AutoMapper;
+using Mango.AzureBus;
 using Mango.Services.OrderAPI.DbContexts;
 using Mango.Services.OrderAPI.Extensions;
 using Mango.Services.OrderAPI.Messaging;
@@ -49,13 +50,14 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
-optionBuilder.UseSqlServer(config.GetConnectionString("Mac"));
+optionBuilder.UseSqlServer(config.GetConnectionString("Windows"));
 
 builder.Services.AddSingleton(new OrderRepository(optionBuilder.Options));
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer >();
+builder.Services.AddSingleton<IMessageBus, AzureServiceBusMessageBus>();
 
 builder.Services.AddDbContext<AppDbContext>(options=>
-    options.UseSqlServer(config.GetConnectionString("Mac")));
+    options.UseSqlServer(config.GetConnectionString("Windows")));
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>{
     options.Authority = "https://localhost:7295/";
