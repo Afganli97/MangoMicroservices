@@ -45,7 +45,6 @@ builder.Services.AddSwaggerGen(c=>{
     });
 });
 
-//builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 

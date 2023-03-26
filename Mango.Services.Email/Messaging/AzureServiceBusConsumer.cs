@@ -5,12 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Mango.AzureBus;
-using Mango.Services.OrderAPI.Messages;
-using Mango.Services.OrderAPI.Models;
-using Mango.Services.OrderAPI.Repository;
-using Newtonsoft.Json;
+using Mango.Services.Email.Repository;
 
-namespace Mango.Services.OrderAPI.Messaging
+namespace Mango.Services.Email.Messaging
 {
     public class AzureServiceBusConsumer : IAzureServiceBusConsumer
     {
@@ -20,16 +17,16 @@ namespace Mango.Services.OrderAPI.Messaging
         private readonly string orderPaymentProcessTopic;
         private readonly string orderUpdatePaymentResultTopic;
         private readonly string mangoOrderSubscription;
-        private readonly OrderRepository _orderRepository;
+        private readonly EmailRepository _emailRepository;
         private readonly IConfiguration _configuration;
         private readonly IMessageBus _messageBus;
         private ServiceBusProcessor checkOutProcessor;
         private ServiceBusProcessor orderUpdatePaymentStatusProcessor;
 
 
-        public AzureServiceBusConsumer(OrderRepository orderRepository, IConfiguration configuration, IMessageBus messageBus)
+        public AzureServiceBusConsumer(EmailRepository emailRepository, IConfiguration configuration, IMessageBus messageBus)
         {
-            _orderRepository = orderRepository;
+            _emailRepository = emailRepository;
             _configuration = configuration;
             serviceBusConnectionString = _configuration.GetValue<string>("OrderBusConnectionString");
             subscriptionCheckOut = _configuration.GetValue<string>("SubscriptionCheckOut");
